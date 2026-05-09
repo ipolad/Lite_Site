@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    const toEmail = process.env.DEMO_TO_EMAIL ?? 'hello@liteplatform.io'
+    const toEmail = process.env.DEMO_TO_EMAIL ?? 'ipolad@gmail.com'
 
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
