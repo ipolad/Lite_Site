@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="lite · Agents Integrity Platform">
+<meta property="og:description" content="The detective for your AI agents. lite catches the moment when what an agent was asked, what it says it did, and what actually changed in your data are not the same.">
+<title>lite · Agents Integrity Platform</title>
+<meta name="description" content="lite is the detective for your AI agents. It catches the moment when what an agent was asked, what it says it did, and what actually changed in your data are not the same.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend+Exa:wght@100;200;300&family=Lexend:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: dark gradient "light" sections (hero, demo, stats, contact) alternate with bright content sections.
+   Brand logic: violet = ASKED, blue = SAID, teal = DID; the amber beam from the logo's "i" = lite catching a gap. */
+:root{
+  --night:#060814;
+  --night-2:#0C1022;
+  --paper:#F5F6FB;
+  --white:#FFFFFF;
+  --ink:#0A0E1F;
+  --ink-2:#3D4459;
+  --ink-3:#6A7189;
+  --violet:#7B5CFF;
+  --blue:#3D7BFF;
+  --sky:#3EC5F7;
+  --teal:#22CFA0;
+  --amber:#F7A548;
+  --beam:#FFF3E0;
+  --violet-ink:#5B3EF0;
+  --blue-ink:#1F5FE6;
+  --teal-ink:#0C9670;
+  --amber-ink:#B8600B;
+  --grad:linear-gradient(100deg,#7B5CFF 0%,#3D7BFF 45%,#3EC5F7 100%);
+  --grad-warm:linear-gradient(100deg,#7B5CFF 0%,#3D7BFF 50%,#F7A548 100%);
+  --font-display:"Lexend Exa", "Lexend", "Avenir Next", system-ui, sans-serif;
+  --font-body:"Lexend", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --measure:1200px;
+  --gutter:clamp(20px,4vw,48px);
+  --radius:18px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--night)}
+body{margin:0;background:var(--paper);color:var(--ink-2);font-family:var(--font-body);font-weight:300;font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.wrap{max-width:var(--measure);margin:0 auto;padding-inline:var(--gutter)}
+h1,h2,h3{margin:0;text-wrap:balance}
+h2{font-family:var(--font-body);font-weight:500;font-size:clamp(32px,4.4vw,56px);line-height:1.08;letter-spacing:-.035em;color:var(--ink)}
+h3{font-weight:500;font-size:19px;line-height:1.3;letter-spacing:-.01em;color:var(--ink)}
+p{margin:0;max-width:62ch}
+.lede{font-size:clamp(17px,1.5vw,20px);line-height:1.6}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.pill{display:block;font-family:var(--font-display);font-weight:300;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--violet-ink)}
+
+.dark{background:var(--night);color:#B9BFD3}
+.dark h2,.dark h3{color:#F2F3F8}
+.dark .pill{color:#B3A6FF}
+section.block{padding-block:clamp(84px,10vw,140px);position:relative}
+.head{display:grid;gap:20px;margin-bottom:clamp(44px,5vw,72px);max-width:780px}
+.head.center{margin-inline:auto;text-align:center;justify-items:center}
+.head.center p{margin-inline:auto}
+
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-body);font-size:15.5px;font-weight:500;padding:14px 24px;border-radius:999px;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
+.btn-grad{background:var(--grad);color:#fff;box-shadow:0 10px 30px -10px rgba(61,123,255,.7)}
+.btn-grad:hover{transform:translateY(-2px);box-shadow:0 16px 40px -12px rgba(61,123,255,.85)}
+.btn-ghost{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.04)}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.btn-dark{background:var(--ink);color:#fff}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn .play{width:22px;height:22px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.btn .play::after{content:"";border-left:7px solid var(--ink);border-top:4.5px solid transparent;border-bottom:4.5px solid transparent;margin-left:2px}
+
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:rgba(6,8,20,.72);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid rgba(255,255,255,.07)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;height:68px}
+.brand{display:block}
+.brand svg{display:block;width:76px;height:32px;overflow:visible}
+.nav-links{display:flex;gap:32px;font-size:14.5px;font-weight:400}
+.nav-links a{text-decoration:none;color:#A9AFC6;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav .btn{padding:10px 18px;font-size:14px}
+@media (max-width:880px){.nav-links{display:none}}
+
+.aurora{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.aurora b{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;will-change:transform}
+.aurora .a1{width:46vw;height:46vw;max-width:720px;max-height:720px;left:-10%;top:-20%;background:radial-gradient(circle,#7B5CFF,transparent 65%);animation:drift1 22s ease-in-out infinite alternate}
+.aurora .a2{width:40vw;height:40vw;max-width:640px;max-height:640px;right:-8%;top:-10%;background:radial-gradient(circle,#3D7BFF,transparent 65%);animation:drift2 26s ease-in-out infinite alternate}
+.aurora .a3{width:34vw;height:34vw;max-width:520px;max-height:520px;left:38%;bottom:-25%;background:radial-gradient(circle,#F7A548,transparent 62%);opacity:.35;animation:drift3 20s ease-in-out infinite alternate}
+.aurora .a4{width:26vw;height:26vw;max-width:420px;max-height:420px;right:18%;bottom:0;background:radial-gradient(circle,#22CFA0,transparent 65%);opacity:.25;animation:drift1 30s ease-in-out infinite alternate-reverse}
+.aurora::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,#000,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,#000,transparent 80%)}
+@keyframes drift1{to{transform:translate(12vw,8vh) scale(1.15)}}
+@keyframes drift2{to{transform:translate(-14vw,10vh) scale(.9)}}
+@keyframes drift3{to{transform:translate(-10vw,-8vh) scale(1.2)}}
+
+.lockup{display:grid;justify-items:start;gap:clamp(14px,1.6vw,22px)}
+.hero-logo{display:block;width:clamp(190px,23vw,320px);height:auto;overflow:visible}
+.hero-logo .lg-ltr path{stroke-dasharray:1;stroke-dashoffset:0;animation:draw 1.1s cubic-bezier(.65,0,.25,1) both}
+.hero-logo .lg-ltr path:nth-child(2),.hero-logo .lg-ltr path:nth-child(3){animation-delay:.12s}
+.hero-logo .lg-ltr path:nth-child(4),.hero-logo .lg-ltr path:nth-child(5){animation-delay:.24s}
+.hero-logo .lg-beam{transform-box:fill-box;transform-origin:center;animation:beamOn .9s .55s cubic-bezier(.2,.7,.2,1) both,breathe 4.5s 1.6s ease-in-out infinite}
+@keyframes draw{from{stroke-dashoffset:1}}
+@keyframes beamOn{from{transform:scaleY(0);opacity:0}}
+@keyframes breathe{50%{opacity:.7}}
+.tagline{font-family:var(--font-display);font-weight:300;font-size:clamp(11.5px,1.05vw,14px);letter-spacing:.34em;text-transform:uppercase;color:#C9CDE0;animation:rise .8s .8s cubic-bezier(.2,.7,.2,1) both}
+.nav .brand{transition:opacity .35s}
+.nav.at-top .brand{opacity:0;pointer-events:none}
+.hero{position:relative;overflow:hidden;padding-block:clamp(56px,7vw,96px) clamp(64px,8vw,104px)}
+.hero .wrap{position:relative}
+.neq{display:flex;justify-content:space-between;align-items:flex-start;gap:clamp(18px,2.8vw,44px);margin:clamp(52px,6.5vw,88px) 0 0}
+.neq .w{display:grid;gap:14px;flex:0 0 auto;max-width:30%;animation:rise .9s 1s cubic-bezier(.2,.7,.2,1) both}
+.neq .w.said{animation-delay:1.25s}
+.neq .w.did{animation-delay:1.5s}
+.neq .word{font-family:var(--font-display);font-weight:200;font-size:clamp(40px,5.9vw,84px);line-height:.95;letter-spacing:.03em;white-space:nowrap;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.w.asked .word{background-image:linear-gradient(90deg,#FFFFFF 10%,#B9A8FF)}
+.w.said .word{background-image:linear-gradient(90deg,#FFFFFF 10%,#9CC0FF)}
+.w.did .word{background-image:linear-gradient(90deg,#FFFFFF 10%,#8DECD2)}
+.neq .cap{font-size:clamp(13px,1.15vw,15px);color:#A9AFC6;line-height:1.4}
+.neq svg.sign{flex:0 0 auto;width:clamp(34px,5vw,72px);height:auto;overflow:visible}
+.neq svg.sign .beam{transform-box:view-box;transform-origin:50px 60px;transform:rotate(22deg);animation:ignite 1.1s cubic-bezier(.2,.7,.2,1) both,flicker 5s ease-in-out 2s infinite}
+.neq svg.sign.s1 .beam{animation-delay:1.35s,2.8s}
+.neq svg.sign.s2 .beam{animation-delay:1.65s,3.3s}
+@keyframes ignite{from{transform:rotate(22deg) scaleY(0);opacity:0}to{transform:rotate(22deg) scaleY(1);opacity:1}}
+@keyframes flicker{0%,100%{opacity:1}50%{opacity:.65}}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.hero-copy{margin-top:clamp(56px,7vw,88px);display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(28px,5vw,80px);align-items:end;animation:rise .9s 1.8s cubic-bezier(.2,.7,.2,1) both}
+.hero-copy .intro{display:grid;gap:16px;min-width:0}
+.hero-copy h1{font-family:var(--font-body);font-weight:500;font-size:clamp(28px,3vw,40px);line-height:1.15;letter-spacing:-.03em;color:#fff}
+.hero-copy .lede{color:#B9BFD3}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.gaps{margin-top:clamp(56px,7vw,88px);display:grid;grid-template-columns:repeat(3,1fr);gap:16px;animation:rise .9s 2s cubic-bezier(.2,.7,.2,1) both}
+.gap{border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:var(--radius);padding:22px 24px;display:grid;gap:8px;align-content:start;min-width:0}
+.gap .pair{font-family:var(--font-display);font-weight:300;font-size:15px;letter-spacing:.06em;color:#fff}
+.gap .pair b{font-weight:300;color:var(--amber);text-shadow:0 0 12px rgba(247,165,72,.7)}
+.gap h3{font-size:17px}
+.gap p{font-size:14.5px;color:#A9AFC6}
+@media (max-width:820px){
+  .neq{flex-direction:column;gap:4px}
+  .neq .w{grid-template-columns:auto 1fr;align-items:baseline;gap:16px;max-width:none}
+  .neq svg.sign{width:44px}
+  .neq .word{font-size:clamp(44px,14vw,64px)}
+  .hero-copy{grid-template-columns:1fr}
+  .gaps{grid-template-columns:1fr}
+}
+
+.perm{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(36px,6vw,96px);align-items:center}
+.perm-copy{display:grid;gap:22px;min-width:0}
+.example{display:block;align-items:start;background:var(--white);border:1px solid rgba(10,14,31,.08);border-radius:14px;padding:16px 18px;box-shadow:0 10px 30px -18px rgba(10,14,31,.25)}
+.example .ic{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#FFE6C7,#FFD199);display:grid;place-items:center;color:var(--amber-ink);font-weight:600}
+.example p{font-size:15px;color:var(--ink)}
+.example small{display:block;font-size:12.5px;font-weight:500;color:var(--amber-ink);margin-bottom:4px}
+.stack{position:relative;background:var(--white);border:1px solid rgba(10,14,31,.08);border-radius:24px;padding:clamp(18px,2.5vw,28px);box-shadow:0 40px 80px -40px rgba(30,40,90,.35);min-width:0}
+.stack-top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;color:var(--ink-3);margin-bottom:14px;flex-wrap:wrap}
+.stack-top .chg{font-family:var(--font-mono);font-size:12px;color:var(--ink);background:var(--paper);padding:5px 10px;border-radius:8px}
+.layers{position:relative;display:grid;gap:10px}
+.rail{position:absolute;left:24px;top:20px;bottom:30px;width:2px;background:repeating-linear-gradient(180deg,rgba(10,14,31,.15) 0 5px,transparent 5px 10px)}
+.packet{position:absolute;left:18px;top:14px;width:14px;height:14px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 5px rgba(247,165,72,.2),0 0 18px rgba(247,165,72,.9);animation:packet 7s cubic-bezier(.6,0,.4,1) infinite;z-index:2}
+@keyframes packet{0%{transform:translateY(0);opacity:0}5%{opacity:1}72%{transform:translateY(var(--drop,330px));opacity:1}90%{transform:translateY(var(--drop,330px));opacity:1}100%{transform:translateY(var(--drop,330px));opacity:0}}
+.layer{position:relative;display:grid;grid-template-columns:30px 1fr auto;gap:14px;align-items:center;padding:14px 14px 14px 12px;border-radius:14px;border:1px solid rgba(10,14,31,.07);background:var(--paper)}
+.layer .node{width:14px;height:14px;border-radius:50%;background:var(--white);border:2px solid rgba(10,14,31,.2);margin-left:6px;z-index:1}
+.layer .q{display:grid;gap:1px;min-width:0}
+.layer h3{font-size:15.5px}
+.layer .q p{font-size:13.5px;color:var(--ink-3)}
+.layer .res{font-size:12px;font-weight:500;letter-spacing:.06em;padding:5px 10px;border-radius:999px;background:#E3F7EE;color:var(--teal-ink);white-space:nowrap}
+.layer:nth-of-type(1) .res{animation:passflash 7s infinite .9s}
+.layer:nth-of-type(2) .res{animation:passflash 7s infinite 1.9s}
+.layer:nth-of-type(3) .res{animation:passflash 7s infinite 2.9s}
+.layer:nth-of-type(4) .res{animation:passflash 7s infinite 3.9s}
+@keyframes passflash{0%,6%{box-shadow:0 0 0 0 rgba(34,207,160,0)}3%{box-shadow:0 0 0 6px rgba(34,207,160,.25)}}
+.layer.lite{background:linear-gradient(100deg,#1A1440,#0E1638);border-color:transparent}
+.layer.lite h3{color:#fff;font-family:var(--font-display);font-weight:300;letter-spacing:.08em}
+.layer.lite .q p{color:#B9BFD3}
+.layer.lite .node{border:0;width:4px;height:26px;border-radius:2px;margin-left:11px;background:var(--beam);box-shadow:0 0 12px 4px rgba(247,165,72,.7)}
+.layer.lite .res{background:var(--amber);color:#2A1500;animation:caught 7s infinite 4.9s}
+@keyframes caught{0%{box-shadow:0 0 0 0 rgba(247,165,72,.8)}12%{box-shadow:0 0 0 14px rgba(247,165,72,0)}100%{box-shadow:0 0 0 0 rgba(247,165,72,0)}}
+.perm-close{margin-top:18px;font-size:15px;color:var(--ink-2)}
+@media (max-width:920px){.perm{grid-template-columns:1fr}}
+
+.demo{overflow:hidden}
+.demo .glow{position:absolute;left:50%;top:38%;width:min(1100px,90vw);height:520px;transform:translate(-50%,-50%);background:radial-gradient(ellipse at 30% 50%,rgba(123,92,255,.45),transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(61,123,255,.4),transparent 60%);filter:blur(40px);pointer-events:none}
+.win{position:relative;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(13,17,36,.88);box-shadow:0 60px 120px -40px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden;min-width:0}
+.win-bar{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px;color:#A9AFC6;flex-wrap:wrap}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.14)}
+.win-bar .title{color:#fff;font-weight:500}
+.win-bar .live{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--teal);padding:3px 9px;border-radius:999px;background:rgba(34,207,160,.12)}
+.win-bar .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--teal);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.3}}
+.win-bar .count{margin-left:auto;font-family:var(--font-mono);font-size:12px}
+.win-bar .count b{color:#fff;font-weight:500;font-variant-numeric:tabular-nums}
+.cols{position:relative;display:grid;grid-template-columns:repeat(3,1fr)}
+.col{padding:18px;min-height:340px;display:grid;align-content:start;gap:10px;min-width:0}
+.col + .col{border-left:1px solid rgba(255,255,255,.07)}
+.col-h{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:300;font-size:13px;letter-spacing:.12em;color:#fff}
+.col.asked .col-h{color:#C3B5FF}
+.col.said .col-h{color:#A8C6FF}
+.col.did .col-h{color:#93E8CF}
+.col-h small{font-family:var(--font-body);letter-spacing:0;font-size:12px;color:#7E86A3;font-weight:300}
+.ev{font-family:var(--font-mono);font-size:12.5px;line-height:1.6;color:#C9CDE0;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s,background .5s,border-color .5s,box-shadow .5s;overflow-wrap:anywhere}
+.ev.on{opacity:1;transform:none}
+.ev .src{display:block;font-family:var(--font-body);font-size:11.5px;color:#7E86A3;margin-bottom:2px}
+.ev .tick{float:right;color:var(--teal);opacity:0;transition:opacity .4s}
+.win.matched .ev.ok .tick{opacity:1}
+.win.matched .ev.ok{border-color:rgba(34,207,160,.35)}
+.win.matched .ev.bad{background:rgba(247,165,72,.12);border-color:rgba(247,165,72,.7);color:#FFE3BF;box-shadow:0 0 30px -6px rgba(247,165,72,.6)}
+.ev.bad .flag{display:block;font-family:var(--font-body);font-size:12px;color:var(--amber);margin-top:4px;opacity:0;transition:opacity .4s}
+.win.matched .ev.bad .flag{opacity:1}
+.scan{position:absolute;top:0;bottom:0;left:0;width:3px;background:linear-gradient(180deg,transparent,var(--beam) 25%,var(--beam) 75%,transparent);box-shadow:0 0 20px 6px rgba(247,165,72,.5),0 0 70px 24px rgba(247,165,72,.18);opacity:0;pointer-events:none}
+.win.scanning .scan{animation:sweep 1.3s cubic-bezier(.6,0,.4,1) forwards}
+@keyframes sweep{0%{left:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:100%;opacity:0}}
+.status{display:flex;align-items:center;gap:12px;padding:12px 18px;border-top:1px solid rgba(255,255,255,.08);font-size:13.5px;color:#A9AFC6;min-height:48px;flex-wrap:wrap}
+.status .st{display:inline-flex;align-items:center;gap:8px}
+.status .st::before{content:"";width:8px;height:8px;border-radius:50%;background:#7E86A3}
+.win.matched .status .st{color:#FFE3BF}
+.win.matched .status .st::before{background:var(--amber);box-shadow:0 0 10px var(--amber)}
+.status .ctrl{margin-left:auto;font:inherit;font-size:12.5px;color:#C9CDE0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:5px 12px;cursor:pointer}
+.toast{position:absolute;left:18px;bottom:64px;width:min(330px,calc(100% - 36px));background:#fff;color:var(--ink);border-radius:14px;padding:14px 16px;box-shadow:0 24px 60px -16px rgba(0,0,0,.6);display:grid;gap:6px;opacity:0;transform:translateY(16px) scale(.98);transition:opacity .5s,transform .5s;z-index:3}
+.win.alerted .toast{opacity:1;transform:none}
+.toast .t-top{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3)}
+.toast .t-top b{color:var(--ink);font-weight:600}
+.toast .t-title{font-weight:500;font-size:14.5px;display:flex;align-items:center;gap:8px}
+.toast .t-title::before{content:"";width:3px;height:16px;border-radius:2px;background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.toast p{font-size:13px;color:var(--ink-2)}
+.toast .t-act{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
+.toast .t-act span{font-size:12px;padding:5px 10px;border-radius:8px;background:var(--paper);color:var(--ink)}
+.toast .t-act span:first-child{background:var(--ink);color:#fff}
+@media (max-width:860px){.cols{grid-template-columns:1fr}.col + .col{border-left:0;border-top:1px solid rgba(255,255,255,.07)}.col{min-height:0}.toast{position:relative;left:auto;bottom:auto;margin:0 18px 18px;width:auto}}
+
+.digest-row{margin-top:clamp(56px,7vw,88px);display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(28px,5vw,72px);align-items:center}
+.digest-row .copy{display:grid;gap:16px;min-width:0}
+.digest{border-radius:20px;background:#fff;color:var(--ink-2);padding:22px;display:grid;gap:18px;box-shadow:0 40px 90px -40px rgba(0,0,0,.8);min-width:0}
+.digest-top{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink-3);flex-wrap:wrap}
+.digest-top b{color:var(--ink);font-weight:600}
+.dnums{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.dnums div{background:var(--paper);border-radius:12px;padding:14px;display:grid;gap:4px;min-width:0}
+.dnums strong{font-weight:500;font-size:clamp(20px,2.4vw,28px);line-height:1;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.dnums span{font-size:12.5px;color:var(--ink-3);line-height:1.35}
+.dnums .hot strong{color:var(--amber-ink)}
+.split{display:grid;gap:9px}
+.split-row{display:grid;grid-template-columns:130px 1fr 22px;gap:12px;align-items:center;font-size:13.5px}
+.split-row .track{height:6px;background:var(--paper);border-radius:3px;overflow:hidden}
+.split-row .track i{display:block;height:100%;border-radius:3px;background:var(--grad-warm)}
+.split-row b{font-weight:500;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+.digest .foot{font-size:13px;border-top:1px solid rgba(10,14,31,.08);padding-top:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.digest .foot em{font-style:normal;color:var(--ink-3)}
+@media (max-width:860px){.digest-row{grid-template-columns:1fr}}
+@media (max-width:420px){.split-row{grid-template-columns:110px 1fr 22px}}
+
+.streams{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.stream{position:relative;background:var(--white);border:1px solid rgba(10,14,31,.07);border-radius:var(--radius);padding:26px 24px 22px;display:grid;grid-template-rows:auto auto 1fr auto;gap:14px;min-width:0;box-shadow:0 20px 50px -30px rgba(30,40,90,.3);overflow:hidden;transition:transform .3s,box-shadow .3s}
+.stream:hover{transform:translateY(-4px);box-shadow:0 30px 60px -30px rgba(30,40,90,.4)}
+.stream::before{content:"";position:absolute;inset:0 0 auto 0;height:4px}
+.stream.asked::before{background:var(--violet)}
+.stream.said::before{background:var(--blue)}
+.stream.did::before{background:var(--teal)}
+.stream .k{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:300;font-size:20px;letter-spacing:.08em;color:var(--ink)}
+.stream .k span{font-family:var(--font-body);font-size:12px;letter-spacing:0;font-weight:500;padding:3px 9px;border-radius:999px}
+.stream.asked .k span{background:#EFEBFF;color:var(--violet-ink)}
+.stream.said .k span{background:#E7EFFF;color:var(--blue-ink)}
+.stream.did .k span{background:#E3F7EE;color:var(--teal-ink)}
+.stream .from{font-size:15px;color:var(--ink)}
+.stream dl{margin:0;display:grid;gap:10px;align-content:start;font-size:14.5px}
+.stream dt{font-size:12.5px;color:var(--ink-3)}
+.stream dd{margin:0}
+.stream pre{margin:4px 0 0;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;color:#C9CDE0;background:var(--night-2);border-radius:12px;padding:14px 16px;white-space:pre-wrap;overflow-wrap:anywhere}
+.stream pre .x{color:var(--amber)}
+@media (max-width:920px){.streams{grid-template-columns:1fr}}
+.matchbar{margin-top:18px;border-radius:var(--radius);padding:22px 26px;background:var(--white);border:1px solid rgba(10,14,31,.07);display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.matchbar .lbl{font-weight:500;color:var(--ink);margin-right:8px}
+.matchbar .t{font-size:14px;padding:7px 12px;border-radius:10px;background:var(--paper);color:var(--ink)}
+.matchbar .op{color:var(--ink-3)}
+.matchbar .r{font-size:14px;font-weight:500;padding:7px 14px;border-radius:10px;background:var(--grad);color:#fff}
+.marquee{margin-top:clamp(48px,6vw,72px);overflow:hidden}
+.marquee .lab{text-align:center;font-size:13px;color:var(--ink-3);margin-bottom:16px}
+.marquee .mask{overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.track-m{display:flex;gap:12px;width:max-content;animation:marquee 45s linear infinite}
+.marquee:hover .track-m{animation-play-state:paused}
+.chip{display:inline-flex;align-items:center;font-size:14.5px;font-weight:400;color:var(--ink);padding:10px 16px;border-radius:999px;background:var(--white);border:1px solid rgba(10,14,31,.08);white-space:nowrap}
+@keyframes marquee{to{transform:translateX(calc(-50% - 6px))}}
+.needs{margin-top:clamp(48px,6vw,72px);display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.need{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start}
+.need .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--white);border:1px solid rgba(10,14,31,.08)}
+.need .ic svg{width:22px;height:22px}
+.need p{font-size:14.5px}
+@media (max-width:820px){.needs{grid-template-columns:1fr}}
+
+.worse{overflow:hidden}
+.worse .aurora b{opacity:.32}
+.worse .wrap{position:relative}
+.math{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,96px);align-items:center}
+.math-copy{display:grid;gap:18px;min-width:0}
+.calc{border-radius:24px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:clamp(22px,3vw,34px);display:grid;gap:20px;min-width:0}
+.calc-out{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.calc-out .big{font-family:var(--font-display);font-weight:200;font-size:clamp(60px,8vw,104px);line-height:1;font-variant-numeric:tabular-nums;background:linear-gradient(100deg,#fff,#B9A8FF 50%,#F7A548);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.calc-out .cap{font-size:14.5px;color:#A9AFC6;max-width:20ch;line-height:1.4}
+.field-row{display:grid;gap:4px}
+.field-row label{display:flex;justify-content:space-between;font-size:13.5px;color:#A9AFC6}
+.field-row output{color:#fff;font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent;cursor:pointer;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(90deg,#7B5CFF,#3D7BFF)}
+input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:linear-gradient(90deg,#7B5CFF,#3D7BFF)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-7px;border-radius:50%;background:#fff;border:0;box-shadow:0 0 0 5px rgba(123,92,255,.3)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:#fff;box-shadow:0 0 0 5px rgba(123,92,255,.3)}
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:end}
+.bars div{display:grid;gap:6px;justify-items:start}
+.bars .b{width:100%;height:80px;display:flex;align-items:flex-end}
+.bars .b i{display:block;width:100%;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#8E77FF,#3D7BFF);transition:height .3s}
+.bars strong{font-weight:500;color:#fff;font-size:14px;font-variant-numeric:tabular-nums}
+.bars span{font-size:12px;color:#7E86A3}
+.note{font-size:12.5px;color:#7E86A3}
+.stats{margin-top:clamp(56px,7vw,88px);display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.stat{border-radius:var(--radius);border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);padding:26px;display:grid;gap:10px;align-content:start;min-width:0}
+.stat .num{font-family:var(--font-display);font-weight:200;font-size:clamp(48px,5vw,68px);line-height:1;font-variant-numeric:tabular-nums}
+.stat:nth-child(1) .num{color:#C3B5FF}.stat:nth-child(2) .num{color:#9CC0FF}.stat:nth-child(3) .num{color:#FFC98A}
+.stat p{font-size:15px}
+.source{margin-top:22px;font-size:12.5px;color:#7E86A3}
+@media (max-width:920px){.math{grid-template-columns:1fr}}
+@media (max-width:760px){.stats{grid-template-columns:1fr}}
+
+.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.module{position:relative;background:var(--white);border:1px solid rgba(10,14,31,.07);border-radius:22px;padding:28px 26px;display:grid;gap:14px;align-content:start;min-width:0;box-shadow:0 20px 50px -30px rgba(30,40,90,.3);overflow:hidden}
+.module.now{background:linear-gradient(160deg,#16123A,#0D1530);color:#B9BFD3;border-color:transparent}
+.module.now h3,.module.now .verb{color:#fff}
+.module .top{display:flex;justify-content:space-between;align-items:center}
+.module .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--paper)}
+.module.now .ic{background:rgba(255,255,255,.08)}
+.module .ic svg{width:28px;height:28px}
+.module .phase{font-size:12.5px;font-weight:500;padding:5px 11px;border-radius:999px;background:var(--paper);color:var(--ink-3)}
+.module.now .phase{background:rgba(247,165,72,.16);color:var(--amber)}
+.module h3{font-size:26px;letter-spacing:-.02em}
+.module h3 span{font-family:var(--font-display);font-weight:300;letter-spacing:.06em;font-size:.8em;opacity:.6;margin-right:6px}
+.module .verb{font-weight:400;color:var(--ink)}
+.module ul{margin:0;padding:0;list-style:none;display:grid;gap:9px;font-size:14.5px}
+.module li{display:grid;grid-template-columns:18px 1fr;gap:8px}
+.module li::before{content:"";width:16px;height:16px;border-radius:50%;margin-top:3px;background:#EFEBFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.2l2.2 2.2 4.8-4.8' fill='none' stroke='%235B3EF0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.module.now li::before{background-color:rgba(255,255,255,.1);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.2l2.2 2.2 4.8-4.8' fill='none' stroke='%23F7A548' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.module .ctl{font-size:13px;color:var(--ink-3);border-top:1px solid rgba(10,14,31,.08);padding-top:14px;margin-top:4px}
+.module.now .ctl{border-color:rgba(255,255,255,.1);color:#A9AFC6}
+.module .radar{position:absolute;right:-70px;top:-70px;width:220px;height:220px;border-radius:50%;background:conic-gradient(from 0deg,rgba(247,165,72,.4),transparent 25%);animation:spin 5s linear infinite;mask-image:radial-gradient(circle,#000 30%,transparent 70%);-webkit-mask-image:radial-gradient(circle,#000 30%,transparent 70%);pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (max-width:920px){.modules{grid-template-columns:1fr}}
+.later{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.later article{background:var(--white);border:1px solid rgba(10,14,31,.07);border-radius:22px;padding:28px 26px;display:grid;gap:16px;align-content:start;min-width:0}
+.later .eyebrow{font-size:13px;font-weight:500;color:var(--violet-ink)}
+.later h3{font-size:21px}
+.tier{display:grid;grid-template-columns:120px 1fr;gap:2px 16px;padding:13px 0;border-top:1px solid rgba(10,14,31,.07);font-size:14.5px}
+.tier b{font-weight:500;color:var(--ink)}
+.tier .eg{color:var(--ink-3)}
+.tier .do{grid-column:2}
+.lessons{margin:0;padding:0;list-style:none;display:grid}
+.lessons li{display:grid;grid-template-columns:150px 1fr;gap:2px 16px;padding:13px 0;border-top:1px solid rgba(10,14,31,.07);font-size:14.5px}
+.lessons li b{font-weight:500;color:var(--ink)}
+.later .result{font-size:14.5px;color:var(--ink);background:var(--paper);border-radius:12px;padding:12px 14px}
+@media (max-width:920px){.later{grid-template-columns:1fr}}
+@media (max-width:520px){.tier,.lessons li{grid-template-columns:1fr}.tier .do{grid-column:1}}
+
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.person{background:var(--white);border:1px solid rgba(10,14,31,.07);border-radius:22px;padding:26px;display:grid;gap:8px;align-content:start;min-width:0}
+.avatar{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-weight:500;color:#fff;background:var(--grad);margin-bottom:8px}
+.avatar.st{background:linear-gradient(135deg,#1A1440,#0E1638)}
+.avatar.st::after{content:"";width:3px;height:30px;border-radius:2px;background:var(--beam);box-shadow:0 0 10px 3px rgba(247,165,72,.6)}
+.person .role{font-size:12.5px;font-weight:500;color:var(--violet-ink)}
+.person h3{font-size:21px}
+.person p{font-size:14.5px}
+.person .from{font-size:13.5px;color:var(--ink-3)}
+.buyer{margin:clamp(40px,5vw,60px) auto 0;text-align:center;font-weight:500;font-size:clamp(26px,3.2vw,40px);letter-spacing:-.03em;color:var(--ink)}
+@media (max-width:820px){.team{grid-template-columns:1fr}}
+
+.access{overflow:hidden}
+.access .wrap{position:relative}
+.access-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(36px,6vw,96px);align-items:center}
+.access-copy{display:grid;gap:20px;min-width:0}
+.access-copy h2{font-size:clamp(36px,4.8vw,60px)}
+.form{background:#fff;border-radius:24px;padding:clamp(22px,3vw,34px);box-shadow:0 50px 100px -40px rgba(0,0,0,.8);min-width:0;color:var(--ink-2)}
+.fields{display:grid;gap:16px;position:relative}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f{display:grid;gap:6px;min-width:0}
+.f label,.f legend{font-size:13px;font-weight:400;color:var(--ink-2);padding:0;margin-bottom:6px}
+.f > label{margin-bottom:0}
+.f input,.f select,.f textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--paper);border:1px solid rgba(10,14,31,.1);border-radius:12px;padding:12px 14px;width:100%;transition:border-color .2s,box-shadow .2s,background .2s}
+.f textarea{resize:vertical;min-height:88px}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;background:#fff;border-color:var(--blue);box-shadow:0 0 0 4px rgba(61,123,255,.15)}
+.f input[aria-invalid=true]{border-color:#E0485E}
+.f .err{font-size:13px;color:#C8314A}
+.f .err:empty{display:none}
+fieldset.f{border:0;margin:0;padding:0}
+.seg{display:flex;gap:4px;padding:4px;border-radius:14px;background:var(--paper);width:max-content;max-width:100%;flex-wrap:wrap}
+.seg label{position:relative;font-size:14px;color:var(--ink-2);cursor:pointer;margin:0}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg span{display:block;padding:8px 14px;border-radius:10px;transition:background .2s,color .2s}
+.seg input:checked + span{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(10,14,31,.1)}
+.seg input:focus-visible + span{outline:2px solid var(--blue);outline-offset:1px}
+.form .ctas{align-items:center}
+.fine{font-size:13px;color:var(--ink-3)}
+.done{display:grid;gap:14px}
+.done h3{font-size:26px}
+.done .tag{font-size:13px;font-weight:500;color:var(--teal-ink)}
+.done pre{margin:0;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;color:var(--ink-2);background:var(--paper);border-radius:12px;padding:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.done .row{display:flex;flex-wrap:wrap;gap:10px}
+.addr{color:var(--blue-ink);font-weight:500;user-select:all}
+.honey{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+@media (max-width:920px){.access-grid{grid-template-columns:1fr}}
+@media (max-width:520px){.form-row{grid-template-columns:1fr}}
+
+footer{background:var(--night);color:#7E86A3;padding-block:40px 52px;border-top:1px solid rgba(255,255,255,.07)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px}
+footer .brand svg{width:56px;height:24px}
+footer nav{display:flex;flex-wrap:wrap;gap:22px;font-size:13.5px}
+footer nav a{text-decoration:none}
+footer nav a:hover{color:#fff}
+footer p{font-size:13px}
+
+@supports (animation-timeline: view()){
+  .reveal{animation:rise linear both;animation-timeline:view();animation-range:entry 0% cover 22%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .packet{display:none}
+  .neq svg.sign .beam{transform:rotate(22deg)}
+}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="silver" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#F0F1F6"/><stop offset="1" stop-color="#A2A8BA"/></linearGradient>
+    <linearGradient id="core" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFF3E0" stop-opacity="0"/><stop offset=".3" stop-color="#FFF3E0"/><stop offset=".7" stop-color="#FFF3E0"/><stop offset="1" stop-color="#FFF3E0" stop-opacity="0"/></linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#F09A45" stop-opacity=".8"/><stop offset=".5" stop-color="#A9612B" stop-opacity=".28"/><stop offset="1" stop-color="#A9612B" stop-opacity="0"/></radialGradient>
+    <linearGradient id="gIcon" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#7B5CFF"/><stop offset="1" stop-color="#3D7BFF"/></linearGradient>
+    <symbol id="wordmark" viewBox="400 330 1200 500" overflow="visible">
+      <ellipse cx="795" cy="581" rx="62" ry="250" fill="url(#glow)"/>
+      <rect x="791.5" y="335" width="7" height="492" rx="3.5" fill="url(#core)"/>
+      <g fill="none" stroke="url(#silver)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M419 419 V700 Q419 744 463 744 H606"/>
+        <path d="M956 419 H1207 M1081 419 V744"/>
+        <path d="M1582 419 H1412 Q1368 419 1368 463 V700 Q1368 744 1412 744 H1582 M1368 581 H1550"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="lite home"><svg viewBox="0 0 1200 500" aria-hidden="true"><use href="#wordmark"/></svg></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#permission">Why it's missed</a>
+      <a href="#demo">Product</a>
+      <a href="#how">How it works</a>
+      <a href="#platform">Platform</a>
+      <a href="#team">Team</a>
+    </nav>
+    <a class="btn btn-grad" href="#access">Contact us</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero dark">
+    <div class="aurora" aria-hidden="true"><b class="a1"></b><b class="a2"></b><b class="a3"></b><b class="a4"></b></div>
+    <div class="wrap">
+      <div class="lockup">
+        <svg class="hero-logo" viewBox="400 330 1200 500" role="img" aria-label="lite">
+          <defs><linearGradient id="silverU" gradientUnits="userSpaceOnUse" x1="419" y1="0" x2="1582" y2="0"><stop offset="0" stop-color="#F0F1F6"/><stop offset="1" stop-color="#A2A8BA"/></linearGradient></defs>
+          <g class="lg-beam"><ellipse cx="795" cy="581" rx="62" ry="250" fill="url(#glow)"/><rect x="791.5" y="335" width="7" height="492" rx="3.5" fill="url(#core)"/></g>
+          <g class="lg-ltr" fill="none" stroke="url(#silverU)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+            <path pathLength="1" d="M419 419 V700 Q419 744 463 744 H606"/>
+            <path pathLength="1" d="M956 419 H1207"/><path pathLength="1" d="M1081 419 V744"/>
+            <path pathLength="1" d="M1582 419 H1412 Q1368 419 1368 463 V700 Q1368 744 1412 744 H1582"/><path pathLength="1" d="M1368 581 H1550"/>
+          </g>
+        </svg>
+        <p class="tagline">Agents Integrity Platform</p>
+      </div>
+      <div class="neq" role="img" aria-label="Asked is not Said is not Did">
+        <span class="w asked"><span class="word">ASKED</span><span class="cap">What the agent was asked to do</span></span>
+        <svg class="sign s1" viewBox="0 0 100 120" aria-hidden="true">
+          <g stroke="#D3D6E2" stroke-width="2.2" stroke-linecap="round"><line x1="10" y1="48" x2="90" y2="48"/><line x1="10" y1="72" x2="90" y2="72"/></g>
+          <g class="beam"><ellipse cx="50" cy="60" rx="12" ry="60" fill="url(#glow)"/><rect x="48.7" y="0" width="2.6" height="120" rx="1.3" fill="url(#core)"/></g>
+        </svg>
+        <span class="w said"><span class="word">SAID</span><span class="cap">What it says it did</span></span>
+        <svg class="sign s2" viewBox="0 0 100 120" aria-hidden="true">
+          <g stroke="#D3D6E2" stroke-width="2.2" stroke-linecap="round"><line x1="10" y1="48" x2="90" y2="48"/><line x1="10" y1="72" x2="90" y2="72"/></g>
+          <g class="beam"><ellipse cx="50" cy="60" rx="12" ry="60" fill="url(#glow)"/><rect x="48.7" y="0" width="2.6" height="120" rx="1.3" fill="url(#core)"/></g>
+        </svg>
+        <span class="w did"><span class="word">DID</span><span class="cap">What actually changed in your data</span></span>
+      </div>
+
+      <div class="hero-copy">
+        <div class="intro">
+          <h1>lite is the detective for your AI&nbsp;agents.</h1>
+          <p class="lede">AI agents now change real business data. What they were asked, what they report and what they actually did can be three different things. lite catches the moment they stop matching, and tells the person in charge.</p>
+        </div>
+        <div class="ctas">
+          <a class="btn btn-grad" href="#access">Become a design partner</a>
+          <a class="btn btn-ghost" href="#demo"><span class="play" aria-hidden="true"></span>See it catch a gap</a>
+        </div>
+      </div>
+
+      <div class="gaps">
+        <div class="gap"><span class="pair">SAID <b>≠</b> DID</span><h3>Silent failure</h3><p>The agent says "done". Nothing changed in the system.</p></div>
+        <div class="gap"><span class="pair">DID <b>≠</b> SAID</span><h3>Unclaimed change</h3><p>Data changed that the agent never reported.</p></div>
+        <div class="gap"><span class="pair">DID <b>≠</b> ASKED</span><h3>Drift</h3><p>The agent did more than it was asked, or something else.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="permission">
+    <div class="wrap perm">
+      <div class="perm-copy reveal">
+        <span class="pill">Why security tools miss it</span>
+        <h2>The agent had permission.</h2>
+        <p class="lede">No attack. No stolen password. No policy broken. The agent was logged in, authorized and well-behaved, and it still changed the wrong data.</p>
+        <div class="example">
+          <div><small>For example</small><p>While issuing a refund, a support agent also upgrades customer 4471 to VIP. Nobody asked for it. The agent never reported it.</p></div>
+        </div>
+      </div>
+
+      <div class="stack reveal" aria-label="Every security layer passes the change; lite catches it">
+        <div class="stack-top"><span>One change, travelling through your stack</span><span class="chg">cust 4471 → VIP</span></div>
+        <div class="layers" id="layers">
+          <span class="rail" aria-hidden="true"></span>
+          <span class="packet" aria-hidden="true"></span>
+          <div class="layer"><span class="node"></span><div class="q"><h3>Identity &amp; access</h3><p>Allowed to write here? Yes, it has permission.</p></div><span class="res">PASSES</span></div>
+          <div class="layer"><span class="node"></span><div class="q"><h3>Agent security &amp; guardrails</h3><p>An attack or malicious prompt? No.</p></div><span class="res">PASSES</span></div>
+          <div class="layer"><span class="node"></span><div class="q"><h3>Data security &amp; DLP</h3><p>Did sensitive data leak out? No.</p></div><span class="res">PASSES</span></div>
+          <div class="layer"><span class="node"></span><div class="q"><h3>Observability &amp; traces</h3><p>Did the agent report success? Yes, "done".</p></div><span class="res">PASSES</span></div>
+          <div class="layer lite"><span class="node"></span><div class="q"><h3>lite</h3><p>Does what changed match what was asked and said? No.</p></div><span class="res">CAUGHT</span></div>
+        </div>
+        <p class="perm-close">lite is the last line of defense. It catches what every other layer lets through, before it becomes a painful data problem.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block dark demo" id="demo">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="wrap" style="position:relative">
+      <div class="head center reveal">
+        <span class="pill">lite Radar</span>
+        <h2>Watch lite catch it.</h2>
+        <p class="lede">lite lines up the three records of every agent task. When they don't match, the owner hears within minutes.</p>
+      </div>
+
+      <div class="win" id="win" aria-label="Animated product demo of lite Radar">
+        <div class="win-bar">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="title">lite Radar</span>
+          <span class="live">Live</span>
+          <span class="count">actions checked today <b id="cnt">1,842</b></span>
+        </div>
+        <div class="cols">
+          <div class="col asked">
+            <div class="col-h">ASKED <small>Zendesk</small></div>
+            <div class="ev ok on" data-at="1"><span class="src">ticket #5120 · 14:01</span>"Refund order 8821 for customer 4471"<span class="tick">✓</span></div>
+          </div>
+          <div class="col said">
+            <div class="col-h">SAID <small>agent trace</small></div>
+            <div class="ev ok on" data-at="2"><span class="src">support-bot-07 · tool call</span>refund(8821, 49.90)<span class="tick">✓</span></div>
+            <div class="ev ok on" data-at="3"><span class="src">support-bot-07 · final answer</span>"Done, refund issued"<span class="tick">✓</span></div>
+          </div>
+          <div class="col did">
+            <div class="col-h">DID <small>Stripe · Salesforce</small></div>
+            <div class="ev ok on" data-at="4"><span class="src">stripe · refunds</span>order 8821 → refunded 49.90<span class="tick">✓</span></div>
+            <div class="ev bad on" data-at="5"><span class="src">salesforce · field history</span>cust 4471 tier: standard → VIP<span class="flag">Unclaimed change. Never asked, never reported.</span></div>
+          </div>
+          <span class="scan" aria-hidden="true"></span>
+        </div>
+        <div class="status">
+          <span class="st" id="st">Gap found in task #5120: unclaimed change</span>
+          <button class="ctrl" type="button" id="playCtl">Pause</button>
+        </div>
+        <div class="toast" role="status">
+          <div class="t-top"><b>lite</b><span>to the agent's owner · now</span></div>
+          <div class="t-title">Gap detected: support-bot-07</div>
+          <p>Customer 4471 was upgraded to VIP during a refund. Never asked for, never reported.</p>
+          <div class="t-act"><span>View evidence</span><span>Roll back</span><span>Mark as expected</span></div>
+        </div>
+      </div>
+
+      <div class="digest-row">
+        <div class="copy reveal">
+          <h2 style="font-size:clamp(28px,3.2vw,40px)">The executive sees the pattern every morning.</h2>
+          <p class="lede">A daily summary to the CIO: how many agent actions were checked, how many matched, and which agents keep drifting. Nobody has to go looking.</p>
+          <p style="font-size:14px;color:#7E86A3">Alerts go to Slack, Teams or email.</p>
+        </div>
+        <div class="digest reveal">
+          <div class="digest-top"><span><b>Agent integrity</b> · yesterday</span><span>To: CIO · 07:00</span></div>
+          <div class="dnums">
+            <div><strong>1,842</strong><span>agent actions checked</span></div>
+            <div><strong>99.3%</strong><span>asked = said = did</span></div>
+            <div class="hot"><strong>13</strong><span>gaps found</span></div>
+          </div>
+          <div class="split">
+            <div class="split-row"><span>Silent failures</span><span class="track"><i style="width:69%"></i></span><b>9</b></div>
+            <div class="split-row"><span>Unclaimed changes</span><span class="track"><i style="width:23%"></i></span><b>3</b></div>
+            <div class="split-row"><span>Drift</span><span class="track"><i style="width:8%"></i></span><b>1</b></div>
+          </div>
+          <div class="foot"><span>Most gaps: support-bot-07 (6). 11 of 13 resolved.</span><em>Illustrative numbers</em></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="how">
+    <div class="wrap">
+      <div class="head reveal">
+        <span class="pill">How it works</span>
+        <h2>Three records of every agent task. <span class="grad-text">One answer.</span></h2>
+        <p class="lede">When they match, lite stays quiet. When they don't, a human knows within minutes.</p>
+      </div>
+      <div class="streams">
+        <div class="stream asked reveal">
+          <span class="k">ASKED <span>the task</span></span>
+          <p class="from">Taken from the first step of the agent's trace, or the ticket system.</p>
+          <dl>
+            <div><dt>Tickets</dt><dd>Zendesk, Jira, ServiceNow</dd></div>
+            <div><dt>Prompts</dt><dd>Chat, Slack, Teams</dd></div>
+            <div><dt>Triggers</dt><dd>Workflow events, schedules, another agent</dd></div>
+          </dl>
+          <pre>ticket #5120:
+"refund order 8821
+ for customer 4471"</pre>
+        </div>
+        <div class="stream said reveal">
+          <span class="k">SAID <span>the report</span></span>
+          <p class="from">One extra export line pointing at lite.</p>
+          <dl>
+            <div><dt>Agent traces</dt><dd>OpenTelemetry from LangChain, OpenAI and Claude agent SDKs, CrewAI</dd></div>
+            <div><dt>Existing tools</dt><dd>Langfuse, LangSmith, Datadog</dd></div>
+            <div><dt>Or</dt><dd>lite's MCP gateway, vendor agent logs</dd></div>
+          </dl>
+          <pre>refund(8821, 49.90)
+→ "Done, refund issued"</pre>
+        </div>
+        <div class="stream did reveal">
+          <span class="k">DID <span>the change</span></span>
+          <p class="from">A read-only API key or database role.</p>
+          <dl>
+            <div><dt>Apps</dt><dd>Audit logs and field history in Salesforce, Zendesk, Stripe, Workday</dd></div>
+            <div><dt>Databases</dt><dd>Change feeds in Postgres, Snowflake</dd></div>
+            <div><dt>Cloud</dt><dd>CloudTrail, or a read-back query</dd></div>
+          </dl>
+          <pre>order 8821 → refunded
+<span class="x">cust 4471: standard → VIP</span></pre>
+        </div>
+      </div>
+      <div class="matchbar reveal" aria-label="How the three records are matched">
+        <span class="lbl">Matched by</span>
+        <span class="t">agent identity</span><span class="op">+</span>
+        <span class="t">task ID</span><span class="op">+</span>
+        <span class="t">record IDs</span><span class="op">+</span>
+        <span class="t">time window</span><span class="op">=</span>
+        <span class="r">one case to compare</span>
+      </div>
+
+      <div class="marquee" aria-label="Sources lite is built to read from">
+        <p class="lab">Built to read from the stack you already run</p>
+        <div class="mask">
+          <div class="track-m">
+            <span class="chip a">Zendesk</span><span class="chip a">Jira</span><span class="chip a">ServiceNow</span><span class="chip a">Slack</span><span class="chip a">Microsoft Teams</span><span class="chip s">OpenTelemetry</span><span class="chip s">LangChain</span><span class="chip s">OpenAI Agents SDK</span><span class="chip s">Claude Agent SDK</span><span class="chip s">CrewAI</span><span class="chip s">Langfuse</span><span class="chip s">LangSmith</span><span class="chip s">Datadog</span><span class="chip d">Salesforce</span><span class="chip d">Stripe</span><span class="chip d">Workday</span><span class="chip d">Postgres</span><span class="chip d">Snowflake</span><span class="chip d">AWS CloudTrail</span>
+            <span class="chip a" aria-hidden="true">Zendesk</span><span class="chip a" aria-hidden="true">Jira</span><span class="chip a" aria-hidden="true">ServiceNow</span><span class="chip a" aria-hidden="true">Slack</span><span class="chip a" aria-hidden="true">Microsoft Teams</span><span class="chip s" aria-hidden="true">OpenTelemetry</span><span class="chip s" aria-hidden="true">LangChain</span><span class="chip s" aria-hidden="true">OpenAI Agents SDK</span><span class="chip s" aria-hidden="true">Claude Agent SDK</span><span class="chip s" aria-hidden="true">CrewAI</span><span class="chip s" aria-hidden="true">Langfuse</span><span class="chip s" aria-hidden="true">LangSmith</span><span class="chip s" aria-hidden="true">Datadog</span><span class="chip d" aria-hidden="true">Salesforce</span><span class="chip d" aria-hidden="true">Stripe</span><span class="chip d" aria-hidden="true">Workday</span><span class="chip d" aria-hidden="true">Postgres</span><span class="chip d" aria-hidden="true">Snowflake</span><span class="chip d" aria-hidden="true">AWS CloudTrail</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="needs">
+        <div class="need reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="url(#gIcon)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div><h3>Read-only access</h3><p>lite never needs write rights to watch your agents.</p></div></div>
+        <div class="need reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="url(#gIcon)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="11" r="2.5"/><path d="M14 10h4M14 14h3M6 16.5c.8-1.6 4.2-1.6 5 0"/></svg></span><div><h3>One identity per agent</h3><p>So every change traces back to the agent that made it.</p></div></div>
+        <div class="need reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="url(#gIcon)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z"/></svg></span><div><h3>Any framework, any cloud</h3><p>No specific vendor required.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block dark worse" id="worse">
+    <div class="aurora" aria-hidden="true"><b class="a1"></b><b class="a2"></b><b class="a3"></b></div>
+    <div class="wrap">
+      <div class="math">
+        <div class="math-copy reveal">
+          <span class="pill">Why it gets worse</span>
+          <h2>Small errors add up over long tasks.</h2>
+          <p class="lede">If an agent gets each step right 99% of the time, a 50-step task comes out fully right only about 60% of the time. That's simple math, not a survey.</p>
+          <p>Agents are taking on longer tasks, with more steps and fewer human checkpoints. A quarter of them can already start other agents.</p>
+        </div>
+        <div class="calc reveal">
+          <div class="calc-out"><span class="big" id="calcOut">60.5%</span><span class="cap">chance the whole task is right</span></div>
+          <div class="field-row"><label for="pStep">Accuracy per step <output id="pStepOut" for="pStep">99.0%</output></label><input type="range" id="pStep" min="90" max="99.9" step="0.1" value="99"></div>
+          <div class="field-row"><label for="nSteps">Steps in the task <output id="nStepsOut" for="nSteps">50</output></label><input type="range" id="nSteps" min="1" max="200" step="1" value="50"></div>
+          <div class="bars" id="bars" aria-hidden="true">
+            <div><span class="b"><i style="height:99%"></i></span><strong>99%</strong><span>1 step</span></div>
+            <div><span class="b"><i style="height:90%"></i></span><strong>90%</strong><span>10 steps</span></div>
+            <div><span class="b"><i style="height:61%"></i></span><strong>61%</strong><span>50 steps</span></div>
+            <div><span class="b"><i style="height:37%"></i></span><strong>37%</strong><span>100 steps</span></div>
+          </div>
+          <p class="note">Assumes independent steps: chance = accuracy<sup>steps</sup>.</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat reveal"><span class="num" data-to="88" data-suf="%">88%</span><p>of organizations had a confirmed or suspected AI-agent incident in the last year.</p></div>
+        <div class="stat reveal"><span class="num" data-to="47" data-suf="%">47%</span><p>of an organization's AI agents are actively monitored or secured, on average.</p></div>
+        <div class="stat reveal"><span class="num" data-to="25" data-suf="%">25%</span><p>of deployed agents can already create and task other agents.</p></div>
+      </div>
+      <p class="source">Source: Gravitee, <a href="https://www.gravitee.io/blog/state-of-ai-agent-security-2026-report-when-adoption-outpaces-control" target="_blank" rel="noopener">State of AI Agent Security 2026</a>, a survey of 900+ executives and practitioners, February 2026.</p>
+    </div>
+  </section>
+
+  <section class="block" id="platform">
+    <div class="wrap">
+      <div class="head center reveal">
+        <span class="pill">The platform</span>
+        <h2>Catch it. Fix it. <span class="grad-text">Make sure it doesn't come back.</span></h2>
+        <p class="lede">One platform in three modules. Each one reuses the data Radar already collects.</p>
+      </div>
+      <div class="modules">
+        <article class="module now reveal">
+          <span class="radar" aria-hidden="true"></span>
+          <div class="top"><span class="ic"><svg viewBox="0 0 28 28" fill="none" stroke="#F7A548" stroke-width="1.8" stroke-linecap="round"><circle cx="14" cy="14" r="11"/><circle cx="14" cy="14" r="6.5" opacity=".6"/><circle cx="14" cy="14" r="2" fill="#F7A548"/><path d="M14 14 22 6"/></svg></span><span class="phase">Phase 1 · Now</span></div>
+          <h3><span>lite</span>Radar</h3>
+          <p class="verb">Detects the gap and alerts the right people.</p>
+          <ul><li>Compares asked, said and did on every agent task</li><li>Instant alert to the person in charge of the agent</li><li>Daily summary to the executive in charge</li></ul>
+          <span class="ctl">Detective control</span>
+        </article>
+        <article class="module reveal">
+          <div class="top"><span class="ic"><svg viewBox="0 0 28 28" fill="none" stroke="url(#gIcon)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h12a6 6 0 0 1 0 12h-6"/><path d="M9 5 5 9l4 4"/></svg></span><span class="phase">Phase 2 · Next</span></div>
+          <h3><span>lite</span>Rewind</h3>
+          <p class="verb">Rolls back the wrong change.</p>
+          <ul><li>Shows exactly what changed, before and after</li><li>A human approves; lite reverses the change</li><li>Flags what can't be undone and pauses the agent</li></ul>
+          <span class="ctl">Corrective control</span>
+        </article>
+        <article class="module reveal">
+          <div class="top"><span class="ic"><svg viewBox="0 0 28 28" fill="none" stroke="url(#gIcon)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21 10 15l4 4 9-10"/><path d="M17 9h6v6"/></svg></span><span class="phase">Phase 3 · Later</span></div>
+          <h3><span>lite</span>Coach</h3>
+          <p class="verb">Retrains the agent not to repeat it.</p>
+          <ul><li>Every confirmed gap becomes a lesson</li><li>Feeds agent instructions, rules and test cases</li><li>Gap rate per agent goes down over time</li></ul>
+          <span class="ctl">Preventive control</span>
+        </article>
+      </div>
+      <div class="later">
+        <article class="reveal">
+          <span class="eyebrow">lite Rewind</span>
+          <h3>Undo the wrong change, with a human in control.</h3>
+          <div>
+            <div class="tier"><b>Reversible</b><span class="eg">A field or status change</span><span class="do">One-click undo after approval</span></div>
+            <div class="tier"><b>Compensable</b><span class="eg">A refund or payment already sent</span><span class="do">lite proposes the reversing transaction</span></div>
+            <div class="tier"><b>Irreversible</b><span class="eg">An email sent, data shared</span><span class="do">Escalate and pause the agent</span></div>
+          </div>
+          <p class="result">Each undo uses a temporary, narrow permission and is logged as evidence.</p>
+        </article>
+        <article class="reveal">
+          <span class="eyebrow">lite Coach</span>
+          <h3>Turn every confirmed gap into a lesson.</h3>
+          <ul class="lessons">
+            <li><b>Agent instructions</b><span>Clearer rules, like "never change customer tier during a refund"</span></li>
+            <li><b>Guardrail rules</b><span>Block the pattern before it runs again</span></li>
+            <li><b>Test cases</b><span>Replay the case before every new agent version</span></li>
+            <li><b>Training data</b><span>Fine-tuning examples, where you own the model</span></li>
+          </ul>
+          <p class="result">Each agent's gap rate falls over time, and lite shows the trend to the executive.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="team" style="padding-top:0">
+    <div class="wrap">
+      <div class="head center reveal">
+        <span class="pill">Founding team</span>
+        <h2>20+ years each running data, IT, security and AI at scale.</h2>
+      </div>
+      <div class="team">
+        <div class="person reveal"><span class="avatar">IP</span><span class="role">CEO</span><h3>Itzik Polad</h3><p>Former CIO and COO.</p><span class="from">HP, LSports, Papaya Global</span></div>
+        <div class="person reveal"><span class="avatar st"></span><span class="role">COO</span><h3>In stealth</h3><p>Former VP Engineering.</p><span class="from">$15B SaaS &amp; AI company</span></div>
+        <div class="person reveal"><span class="avatar st"></span><span class="role">CTO</span><h3>In stealth</h3><p>Former VP R&amp;D.</p><span class="from">Seed-stage cyber startup</span></div>
+      </div>
+      <p class="buyer reveal">We are the buyer <span class="grad-text">we sell to.</span></p>
+    </div>
+  </section>
+
+  <section class="block dark access" id="access">
+    <div class="aurora" aria-hidden="true"><b class="a1"></b><b class="a2"></b><b class="a3"></b><b class="a4"></b></div>
+    <div class="wrap access-grid">
+      <div class="access-copy">
+        <span class="pill">Design partners</span>
+        <h2>Put your agents in the light.</h2>
+        <p class="lede">We're working with a small group of companies that already run AI agents against production data. If that's you, we'd like to talk.</p>
+        <p style="font-size:15px;color:#7E86A3">Investors, choose "Investor" in the form.</p>
+      </div>
+      <form class="form" id="leadForm" novalidate>
+        <div class="fields" id="formFields">
+          <input type="text" name="_honey" id="honey" class="honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <fieldset class="f">
+            <legend>I'm reaching out as</legend>
+            <div class="seg">
+              <label><input type="radio" name="interest" id="int-partner" value="Design partner" checked><span>Design partner</span></label>
+              <label><input type="radio" name="interest" id="int-updates" value="Product updates"><span>Updates</span></label>
+              <label><input type="radio" name="interest" id="int-investor" value="Investor"><span>Investor</span></label>
+            </div>
+          </fieldset>
+          <div class="form-row">
+            <div class="f"><label for="name">Full name</label><input id="name" name="name" autocomplete="name" required><span class="err" id="name-err"></span></div>
+            <div class="f"><label for="email">Work email</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err" id="email-err"></span></div>
+          </div>
+          <div class="form-row">
+            <div class="f"><label for="company">Company</label><input id="company" name="company" autocomplete="organization" required><span class="err" id="company-err"></span></div>
+            <div class="f"><label for="role">Role</label>
+              <select id="role" name="role"><option>CIO / CTO</option><option>CISO / Security</option><option>Head of Data or AI</option><option>Engineering / Platform</option><option>Risk / Compliance</option><option>Investor</option><option>Other</option></select>
+            </div>
+          </div>
+          <div class="f"><label for="agents">AI agents in production today</label>
+            <select id="agents" name="agents"><option>None yet, planning</option><option>1–5</option><option>6–25</option><option>26–100</option><option>100+</option></select>
+          </div>
+          <div class="f"><label for="msg">What do your agents change? (optional)</label><textarea id="msg" name="msg" placeholder="For example: support agents issuing refunds in Zendesk and Stripe"></textarea></div>
+          <div class="ctas"><button class="btn btn-grad" type="submit" id="submitBtn">Send</button><span class="fine">We reply within one business day.</span></div>
+        </div>
+        <div class="done" id="done" hidden aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="lite home"><svg viewBox="0 0 1200 500" aria-hidden="true"><use href="#wordmark"/></svg></a>
+    <nav aria-label="Footer"><a href="#demo">Product</a><a href="#how">How it works</a><a href="#platform">Platform</a><a href="#access">Contact</a></nav>
+    <p>© 2026 lite · getlite.ai</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const nav = document.querySelector('.nav'), logo = document.querySelector('.hero-logo');
+  if (!nav || !logo || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(es => nav.classList.toggle('at-top', es[0].isIntersecting), {rootMargin:'-68px 0px 0px 0px'}).observe(logo);
+})();
+
+/* ===== Lead capture =====
+   FormSubmit relays each submission to CONTACT_EMAIL. The first submission triggers a one-time
+   activation email to that inbox; after you confirm it, every lead arrives as an email.
+   Once activated, FormSubmit gives you a random alias you can use here instead of the address. */
+const CONTACT_EMAIL = "itzik@getlite.ai";
+const LEAD_ENDPOINT = "https://formsubmit.co/ajax/" + CONTACT_EMAIL;
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+(function(){
+  const layers = document.getElementById('layers'); if (!layers) return;
+  function setDrop(){
+    const lite = layers.querySelector('.layer.lite');
+    layers.style.setProperty('--drop', (lite.offsetTop + lite.offsetHeight/2 - 21) + 'px');
+  }
+  setDrop(); addEventListener('resize', setDrop);
+  if (document.fonts) document.fonts.ready.then(setDrop);
+})();
+
+(function(){
+  const win = document.getElementById('win'), ctl = document.getElementById('playCtl'), st = document.getElementById('st'), cnt = document.getElementById('cnt');
+  if (!win) return;
+  win.classList.add('matched','alerted');
+  if (reduce){ ctl.hidden = true; return; }
+  const evs = [...win.querySelectorAll('.ev')];
+  const DONE = 'Gap found in task #5120: unclaimed change';
+  let timers = [], playing = true, inView = false, running = false, count = 1842;
+  const T = (fn, ms) => timers.push(setTimeout(fn, ms));
+  const clear = () => { timers.forEach(clearTimeout); timers = []; };
+  function cycle(){
+    running = true; clear();
+    win.classList.remove('matched','alerted','scanning');
+    evs.forEach(e => e.classList.remove('on'));
+    st.textContent = 'Watching support-bot-07…';
+    evs.forEach(e => T(() => e.classList.add('on'), 400 + (+e.dataset.at) * 750));
+    T(() => { st.textContent = 'Comparing asked, said and did…'; win.classList.add('scanning'); }, 4700);
+    T(() => { win.classList.remove('scanning'); win.classList.add('matched'); st.textContent = DONE; }, 6100);
+    T(() => { win.classList.add('alerted'); count += 3; cnt.textContent = count.toLocaleString('en-US'); }, 6900);
+    T(() => { if (playing && inView) cycle(); else running = false; }, 13500);
+  }
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(es => { inView = es[0].isIntersecting; if (inView && playing && !running) cycle(); }, {threshold:.35}).observe(win);
+  }
+  ctl.addEventListener('click', () => {
+    playing = !playing; ctl.textContent = playing ? 'Pause' : 'Play';
+    if (!playing){ clear(); running = false; win.classList.remove('scanning'); evs.forEach(e => e.classList.add('on')); win.classList.add('matched','alerted'); st.textContent = DONE; }
+    else cycle();
+  });
+})();
+
+(function(){
+  const p = document.getElementById('pStep'), n = document.getElementById('nSteps');
+  const out = document.getElementById('calcOut'), pOut = document.getElementById('pStepOut'), nOut = document.getElementById('nStepsOut');
+  const cols = document.querySelectorAll('#bars > div'), steps = [1,10,50,100];
+  function update(){
+    const pv = +p.value / 100, nv = +n.value, v = Math.pow(pv, nv) * 100;
+    out.textContent = (v >= 10 ? v.toFixed(1) : v.toFixed(2)) + '%';
+    pOut.textContent = (+p.value).toFixed(1) + '%'; nOut.textContent = nv;
+    cols.forEach((c, i) => { const x = Math.pow(pv, steps[i]) * 100; c.querySelector('i').style.height = Math.max(x, 2) + '%'; c.querySelector('strong').textContent = Math.round(x) + '%'; });
+  }
+  p.addEventListener('input', update); n.addEventListener('input', update); update();
+})();
+
+(function(){
+  if (reduce || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return; io.unobserve(e.target);
+    const el = e.target, to = +el.dataset.to, suf = el.dataset.suf || '', t0 = performance.now();
+    (function step(t){ const k = Math.min(1, Math.max(0, (t - t0) / 1200)), ease = 1 - Math.pow(1 - k, 3); el.textContent = Math.round(to * ease) + suf; if (k < 1) requestAnimationFrame(step); })(t0);
+  }), {threshold:.6});
+  document.querySelectorAll('.stat .num').forEach(n => io.observe(n));
+})();
+
+(function(){
+  const form = document.getElementById('leadForm'), fields = document.getElementById('formFields'), done = document.getElementById('done'), btn = document.getElementById('submitBtn');
+  const req = {
+    name: v => v.trim().length > 1 || 'Enter your name.',
+    email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) || 'Enter a valid work email, like dana@company.com.',
+    company: v => v.trim().length > 1 || 'Enter your company name.'
+  };
+  function check(id){
+    const el = document.getElementById(id), res = req[id](el.value), err = document.getElementById(id + '-err');
+    const ok = res === true; el.setAttribute('aria-invalid', ok ? 'false' : 'true'); err.textContent = ok ? '' : res; return ok;
+  }
+  Object.keys(req).forEach(id => document.getElementById(id).addEventListener('blur', () => check(id)));
+  document.querySelectorAll('input[name=interest]').forEach(r => r.addEventListener('change', () => { if (r.checked && r.value === 'Investor') document.getElementById('role').value = 'Investor'; }));
+  function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!Object.keys(req).map(check).every(Boolean)){ form.querySelector('[aria-invalid=true]').focus(); return; }
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (data._honey) return;
+    delete data._honey;
+    data.submittedAt = new Date().toISOString(); data.source = location.href;
+    const first = data.name.trim().split(/\s+/)[0];
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try{
+      const payload = Object.assign({ _subject: `lite lead · ${data.interest} · ${data.name} (${data.company})`, _template: 'table', _captcha: 'false' }, data);
+      const r = await fetch(LEAD_ENDPOINT, {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(payload)});
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || String(j.success) !== 'true') throw new Error(j.message || r.status);
+      fields.hidden = true; done.hidden = false;
+      done.innerHTML = `<span class="tag">Received</span><h3>Thanks, ${esc(first)}.</h3><p>We'll reply to <span class="addr">${esc(data.email)}</span> within one business day.</p>`;
+      return;
+    }catch(err){ btn.disabled = false; btn.textContent = 'Send'; }
+    const summary = `Interest: ${data.interest}\nName: ${data.name}\nEmail: ${data.email}\nCompany: ${data.company}\nRole: ${data.role}\nAgents in production: ${data.agents}${data.msg ? `\nAgents change: ${data.msg}` : ''}`;
+    fields.hidden = true; done.hidden = false;
+    done.innerHTML = `<span class="tag" style="color:var(--amber-ink)">One more step</span><h3>Thanks, ${esc(first)}.</h3><p>We couldn't send this automatically. Please email it to <span class="addr">${CONTACT_EMAIL}</span>.</p><pre id="summary">${esc(summary)}</pre><div class="row"><button type="button" class="btn btn-dark" id="copyBtn">Copy</button><button type="button" class="btn" id="editBtn" style="border-color:rgba(10,14,31,.15)">Edit</button></div>`;
+    document.getElementById('copyBtn').addEventListener('click', async ev => {
+      const b = ev.currentTarget;
+      try{ await navigator.clipboard.writeText(`To: ${CONTACT_EMAIL}\n\n${summary}`); b.textContent = 'Copied'; }
+      catch(_){ const rg = document.createRange(); rg.selectNodeContents(document.getElementById('summary')); const s = getSelection(); s.removeAllRanges(); s.addRange(rg); b.textContent = 'Selected, press Ctrl/⌘+C'; }
+    });
+    document.getElementById('editBtn').addEventListener('click', () => { done.hidden = true; fields.hidden = false; });
+  });
+})();
+</script>
+
+</body>
+</html>
